@@ -1,6 +1,6 @@
 package com.fastcampus.kafkahandson.ugc.metadata;
 
-import com.fastcampus.kafkahandson.ugc.MetadataPort;
+import com.fastcampus.kafkahandson.ugc.port.MetadataPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
