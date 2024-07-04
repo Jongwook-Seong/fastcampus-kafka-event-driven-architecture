@@ -23,9 +23,8 @@ public class PostAutoInspectAdapter implements PostAutoInspectPort {
                 AutoInspectionPolicy.EXAMPLE_CONTENT,
                 AutoInspectionPolicy.EXAMPLE_INSPECTION_RESULT
         );
-        // ChatGpt에게 검수를 시켜서 결과를 얻는다.
-        String resultString = chatGptClient.getResultForContentWithPolicy(contentString, chatPolicy);
         try {
+            String resultString = chatGptClient.getResultForContentWithPolicy(contentString, chatPolicy);
             return objectMapper.readValue(resultString, AutoInspectionResult.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
