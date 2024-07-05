@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collation = "subscribingInboxPosts")
+@Document(collection = "subscribingInboxPosts")
 @Data
 @AllArgsConstructor
 public class SubscribingPostDocument {
