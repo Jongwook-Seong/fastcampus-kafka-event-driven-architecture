@@ -1,5 +1,6 @@
 package com.fastcampus.kafkahandson.ugc.controller;
 
+import com.fastcampus.kafkahandson.ugc.SubscribingPostListUsecase;
 import com.fastcampus.kafkahandson.ugc.model.PostInListDto;
 import com.fastcampus.kafkahandson.ugc.post.model.ResolvedPost;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,16 @@ import java.util.List;
 @RequestMapping("/list")
 public class PostListController {
 
+    private final SubscribingPostListUsecase subscribingPostListUsecase;
+
     @GetMapping("/inbox/{userId}") // 실제로는 이렇게 안하겠지만..
     ResponseEntity<List<PostInListDto>> listSubscribingPosts(
-        @PathVariable("userId") Long userId
-    ) {
-        return ResponseEntity.internalServerError().build();
+            @PathVariable("userId") Long userId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page) {
+        List<ResolvedPost> subscribigInboxPosts = subscribingPostListUsecase.listSubscribingInboxPosts(
+                new SubscribingPostListUsecase.Request(page, userId)
+        );
+        return ResponseEntity.ok().body(subscribigInboxPosts.stream().map(this::toDto).toList());
     }
 
     @GetMapping("/search")
