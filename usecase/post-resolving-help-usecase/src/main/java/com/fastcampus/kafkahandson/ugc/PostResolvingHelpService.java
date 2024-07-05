@@ -2,6 +2,7 @@ package com.fastcampus.kafkahandson.ugc;
 
 import com.fastcampus.kafkahandson.ugc.port.MetadataPort;
 import com.fastcampus.kafkahandson.ugc.port.PostPort;
+import com.fastcampus.kafkahandson.ugc.port.ResolvedPostCachePort;
 import com.fastcampus.kafkahandson.ugc.post.model.Post;
 import com.fastcampus.kafkahandson.ugc.post.model.ResolvedPost;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,16 @@ public class PostResolvingHelpService implements PostResolvingHelpUsecase {
 
     private final PostPort postPort;
     private final MetadataPort metadataPort;
+    private final ResolvedPostCachePort resolvedPostCachePort;
 
     @Override
     public ResolvedPost resolvePostById(Long postId) {
-        ResolvedPost resolvedPost = null;
+        ResolvedPost resolvedPost = resolvedPostCachePort.get(postId);
+        if (resolvedPost != null) {
+            return resolvedPost;
+        }
+        System.out.println("----------");
+        System.out.println(resolvedPost);
         Post post = postPort.findById(postId);
         if (post != null) {
             String userName = metadataPort.getUserNameByUserId(post.getUserId());
@@ -29,6 +36,7 @@ public class PostResolvingHelpService implements PostResolvingHelpUsecase {
                     userName,
                     categoryName
                 );
+                resolvedPostCachePort.set(resolvedPost);
             }
         }
         return resolvedPost;
